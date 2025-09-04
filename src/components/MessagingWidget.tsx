@@ -4,7 +4,6 @@ import { messagingService, authService } from '../services/api';
 import { normalizeApiResponse } from '../config/api';
 import { useAuth } from '../hooks/useAuth';
 import { Message, User } from '../types';
-import { ChatBot } from './ChatBot';
 import toast from 'react-hot-toast';
 
 export const MessagingWidget: React.FC = () => {
@@ -15,7 +14,6 @@ export const MessagingWidget: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [newMessage, setNewMessage] = useState('');
-  const [unreadCount, setUnreadCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const widgetRef = useRef<HTMLDivElement>(null);
 
@@ -192,10 +190,8 @@ export const MessagingWidget: React.FC = () => {
           <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-blue-600 text-white rounded-t-lg">
             <div className="flex items-center space-x-2">
               <MessageCircle className="h-5 w-5" />
-              <span className="font-medium">
-                {activeTab === 'messages' ? 'Messages' : 'Assistant IA'}
-              </span>
-              {unreadCount > 0 && activeTab === 'messages' && (
+              <span className="font-medium">Messages</span>
+              {unreadCount > 0 && (
                 <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1">
                   {unreadCount}
                 </span>
@@ -209,39 +205,9 @@ export const MessagingWidget: React.FC = () => {
             </button>
           </div>
 
-          {/* Tabs */}
-          <div className="flex border-b border-gray-200">
-            <button
-              onClick={() => setActiveTab('messages')}
-              className={`flex-1 py-2 px-4 text-sm font-medium transition-colors duration-200 ${
-                activeTab === 'messages'
-                  ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <div className="flex items-center justify-center space-x-2">
-                <MessageCircle className="h-4 w-4" />
-                <span>Messages</span>
-              </div>
-            </button>
-            <button
-              onClick={() => setActiveTab('chatbot')}
-              className={`flex-1 py-2 px-4 text-sm font-medium transition-colors duration-200 ${
-                activeTab === 'chatbot'
-                  ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <div className="flex items-center justify-center space-x-2">
-                <Bot className="h-4 w-4" />
-                <span>Assistant IA</span>
-              </div>
-            </button>
-          </div>
 
           {/* Content */}
           <div className="flex-1 overflow-hidden">
-            {activeTab === 'messages' ? (
               <div className="flex h-full">
                 {/* Users List */}
                 <div className="w-1/3 border-r border-gray-200 overflow-y-auto">
@@ -358,9 +324,6 @@ export const MessagingWidget: React.FC = () => {
                   )}
                 </div>
               </div>
-            ) : (
-              <ChatBot />
-            )}
           </div>
         </div>
       )}
